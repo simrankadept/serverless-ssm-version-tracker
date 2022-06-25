@@ -4,7 +4,7 @@ A simple plugin that, when deploying your API, updates SSM Parameter Store with 
 
 ## Configuration
 
-The API versions are updated into SSM using a specific key prefix, which by default is '/app/<stage>/versions'. If you want to supply a custom prefix, you can do so by putting the following configuration in your serverless config file:
+The API versions are updated into SSM using a specific key prefix, which by default is '/app/STAGENAME/versions'. If you want to supply a custom prefix, you can do so by putting the following configuration in your serverless config file:
 
 ```yaml
 custom:
