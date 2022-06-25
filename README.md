@@ -1,14 +1,14 @@
 # Serverless package version tracking information to SSM
 
-A simple plugin that, when deploying your API, updates SSM Parameter Store with a new version that is semver compliant. Version format is YYYY.MM.DD.RELEASE_NUM_OF_DAY The aim is to provide an automatic history log of serverless deployments and their versions.
+A simple plugin that, when deploying your API, updates SSM Parameter Store with a new version that is semver compliant. Version format is YYYY.MM.DD.RELEASE_NUM_OF_DAY. The aim is to provide an automatic history log of serverless deployments and their versions.
 
 ## Configuration
 
-The API git versions are updated into SSM using a specific key prefix, which by default is '/vlncc/<stage>/versions/'. If you want to supply a custom prefix, you can do so by putting the following configuration in your serverless config file:
+The API versions are updated into SSM using a specific key prefix, which by default is '/app/<stage>/versions'. If you want to supply a custom prefix, you can do so by putting the following configuration in your serverless config file:
 
 ```yaml
 custom:
-  ssmApiGitVersion:
+  ssmApiVersion:
     ssmPrefix: '/my-custom/<stage>/prefix/'
 ```
 

@@ -1,17 +1,7 @@
 'use strict';
 
-const { exec } = require('child_process');
+// const { exec } = require('child_process');
 const AWS = require('aws-sdk');
-//const isSemver = require("is-semver");
-
-
-// const promisexec = (command) => new Promise((resolve, reject) => {
-//   exec(command, (error, stdout, stderr) => {
-//     if (error) {reject(new Error(error));}
-//     else if (stderr) {reject(new Error(stderr));}
-//     else {resolve(stdout.trim());}
-//   });
-// });
 
 class ServerlessPlugin {
   constructor(serverless, options) {
@@ -21,12 +11,12 @@ class ServerlessPlugin {
     this.commands = {};
 
     this.hooks = {
-      'after:aws:deploy:deploy:updateStack': this.updateGitDescriptionToSsm.bind(this)
+      'after:aws:deploy:deploy:updateStack': this.updateVersionToSsm.bind(this)
     };
   }
 
-  updateGitDescriptionToSsm() {
-    this.serverless.cli.log('SSM API git version: Acquiring git description...');
+  updateVersionToSsm() {
+    this.serverless.cli.log('SSM API version: Acquiring info...');
 
     const stage = this.options.stage;
     const region = this.options.region;
@@ -77,18 +67,17 @@ class ServerlessPlugin {
 
 
     const ssmPrefix = (this.serverless.service.custom
-      && this.serverless.service.custom.ssmApiGitVersion
-      && this.serverless.service.custom.ssmApiGitVersion.ssmPrefix)
-        ? this.serverless.service.custom.ssmApiGitVersion.ssmPrefix.replace(/<stage>/g, stage)
+      && this.serverless.service.custom.ssmApiVersion
+      && this.serverless.service.custom.ssmApiVersion.ssmPrefix)
+        ? this.serverless.service.custom.ssmApiVersion.ssmPrefix.replace(/<stage>/g, stage)
         : `/app/${stage}/versions`;
-      const ssmname = ssmPrefix + this.serverless.service.service;
+      const ssmParameterName = ssmPrefix + this.serverless.service.service;
 
-      getSsmParameter(ssmname)
+      getSsmParameter(ssmParameterName)
       .then(value => {
         const incrementedVersion = incrementVersion(value.toString())
-        this.serverless.cli.log(`SSM API git version: Updating new version '${incrementedVersion}' to SSM with key '${ssmname}' at region ${region}`);
-        process.env['INCREMENTED_VERSION'] = incrementedVersion
-        return putSsmParameter(ssmname, incrementedVersion);
+        this.serverless.cli.log(`SSM API version: Updating new version '${incrementedVersion}' to SSM with key '${ssmParameterName}' at region ${region}`);
+        return putSsmParameter(ssmParameterName, incrementedVersion);
       });
   }
 }
