@@ -1,7 +1,7 @@
 {
   "name": "serverless-ssm-version-tracker",
   "version": "1.0.0",
-  "description": "",
+  "description": "Track and increment versions of Serverless framework projects in SSM",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
