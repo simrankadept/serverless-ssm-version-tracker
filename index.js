@@ -70,7 +70,7 @@ class ServerlessPlugin {
       && this.serverless.service.custom.ssmApiVersion
       && this.serverless.service.custom.ssmApiVersion.ssmPrefix)
         ? this.serverless.service.custom.ssmApiVersion.ssmPrefix.replace(/<stage>/g, stage)
-        : `/app/${stage}/versions`;
+        : `/app/${stage}/versions/`;
       const ssmParameterName = ssmPrefix + this.serverless.service.service;
 
       getSsmParameter(ssmParameterName)
