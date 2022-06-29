@@ -28,8 +28,14 @@ class ServerlessPlugin {
         Name: name
      };
       SSM.getParameter(params, (err, data) => {
-        if (err) {resolve("");}
-        else {resolve(data);}
+        if (err) {
+          this.serverless.cli.log(`get Parameter err is '${err}'`);
+          resolve("");
+        }
+        else {
+          this.serverless.cli.log(`get Parameter res is '${data}'`);
+          resolve(data);
+        }
       });
     });
 
@@ -41,7 +47,7 @@ class ServerlessPlugin {
       const date = currentDate.getDate()
       var newVersion = "".concat(year, ".", month , ".",  date, ".", "0")
       //&& isSemver(version)
-      if(version && version.contains('.')){
+      if(version && (typeof version === 'string' || version instanceof String) && version.includes('.')){
          let currentVersionArr = version.split('.')
          if(year == currentVersionArr[0] && month ==currentVersionArr[1] && date  == currentVersionArr[2] ){
           let dayIncrement = parseInt(currentVersionArr[3]) + 1
@@ -75,6 +81,7 @@ class ServerlessPlugin {
 
       getSsmParameter(ssmParameterName)
       .then(value => {
+        this.serverless.cli.log(`SSM API version: current version '${value}'`);
         const incrementedVersion = incrementVersion(value.toString())
         this.serverless.cli.log(`SSM API version: Updating new version '${incrementedVersion}' to SSM with key '${ssmParameterName}' at region ${region}`);
         return putSsmParameter(ssmParameterName, incrementedVersion);
