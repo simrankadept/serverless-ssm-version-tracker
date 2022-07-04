@@ -17,11 +17,13 @@ class ServerlessPlugin {
 
   updateVersionToSsm() {
     this.serverless.cli.log('SSM API version: Acquiring info...');
-
-    const stage = this.options.stage;
-    const region = this.options.region;
-
-    const SSM = new AWS.SSM({ region });
+    const { stage, region } = this.options;
+    const provider = this.serverless.getProvider('aws');
+    const awsCredentials = provider.getCredentials();
+    const SSM = new AWS.SSM({
+      region,
+      credentials: awsCredentials.credentials
+    });
 
     const getSsmParameter = (name) => new Promise((resolve, reject) => {
       var params = {
