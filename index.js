@@ -71,23 +71,24 @@ class ServerlessPlugin {
         else { resolve(data); }
 
       });
+    });
 
 
-      const ssmPrefix = (this.serverless.service.custom
-        && this.serverless.service.custom.ssmApiVersion
-        && this.serverless.service.custom.ssmApiVersion.ssmPrefix)
-        ? this.serverless.service.custom.ssmApiVersion.ssmPrefix.replace(/<stage>/g, stage)
-        : `/app/${stage}/versions/`;
-      const ssmParameterName = ssmPrefix + this.serverless.service.service;
+    const ssmPrefix = (this.serverless.service.custom
+      && this.serverless.service.custom.ssmApiVersion
+      && this.serverless.service.custom.ssmApiVersion.ssmPrefix)
+      ? this.serverless.service.custom.ssmApiVersion.ssmPrefix.replace(/<stage>/g, stage)
+      : `/app/${stage}/versions/`;
+    const ssmParameterName = ssmPrefix + this.serverless.service.service;
 
-      getSsmParameter(ssmParameterName)
-        .then(value => {
-          this.serverless.cli.log(`SSM API version: current version '${value}'`);
-          const incrementedVersion = incrementVersion(value.toString())
-          this.serverless.cli.log(`SSM API version: Updating new version '${incrementedVersion}' to SSM with key '${ssmParameterName}' at region ${region}`);
-          return putSsmParameter(ssmParameterName, incrementedVersion);
-        });
-    }
+    getSsmParameter(ssmParameterName)
+      .then(value => {
+        this.serverless.cli.log(`SSM API version: current version '${value}'`);
+        const incrementedVersion = incrementVersion(value.toString())
+        this.serverless.cli.log(`SSM API version: Updating new version '${incrementedVersion}' to SSM with key '${ssmParameterName}' at region ${region}`);
+        return putSsmParameter(ssmParameterName, incrementedVersion);
+      });
+  }
 }
 
 module.exports = ServerlessPlugin;
