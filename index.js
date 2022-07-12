@@ -56,7 +56,6 @@ class ServerlessPlugin {
         }
       }
       return newVersion
-
     }
 
     const putSsmParameter = (name, value) => new Promise((resolve, reject) => {
@@ -69,10 +68,8 @@ class ServerlessPlugin {
       SSM.putParameter(params, (err, data) => {
         if (err) { reject(err); }
         else { resolve(data); }
-
       });
     });
-
 
     const ssmPrefix = (this.serverless.service.custom
       && this.serverless.service.custom.ssmApiVersion
