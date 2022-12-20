@@ -2,16 +2,21 @@
 
 // const { exec } = require('child_process');
 const AWS = require('aws-sdk');
+const BbPromise = require('bluebird');
+
 
 class ServerlessPlugin {
   constructor(serverless, options) {
     this.serverless = serverless;
     this.options = options;
+    this.log = this.serverless.cli.log.bind(this);
 
     this.commands = {};
 
     this.hooks = {
-      'after:aws:deploy:deploy:updateStack': this.updateVersionToSsm.bind(this)
+      //'after:aws:deploy:deploy:updateStack': this.updateVersionToSsm.bind(this)
+      'after:deploy:deploy': () => BbPromise.bind(this)
+                .then(this.updateVersionToSsm)
     };
   }
 
@@ -78,13 +83,19 @@ class ServerlessPlugin {
       : `/app/${stage}/versions/`;
     const ssmParameterName = ssmPrefix + this.serverless.service.service;
 
-    getSsmParameter(ssmParameterName)
+    BbPromise.fromCallback(cb => {
+      getSsmParameter(ssmParameterName)
       .then(value => {
         this.serverless.cli.log(`SSM API version: current version '${value}'`);
         const incrementedVersion = incrementVersion(value.toString())
         this.serverless.cli.log(`SSM API version: Updating new version '${incrementedVersion}' to SSM with key '${ssmParameterName}' at region ${region}`);
-        return putSsmParameter(ssmParameterName, incrementedVersion);
+        putSsmParameter(ssmParameterName, incrementedVersion);
+        cb();
       });
+    });
+    
+    return promise;
+
   }
 }
 
