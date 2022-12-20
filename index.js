@@ -40,24 +40,26 @@ class ServerlessPlugin {
           resolve("");
         }
         else {
-          this.serverless.cli.log(`get Parameter res is '${data}'`);
-          resolve(data);
+          this.serverless.cli.log(`get Parameter res is`, JSON.stringify(data));
+          resolve(data.Parameter.Value);
         }
       });
     });
 
     const incrementVersion = (version) => {
-      console.log("current version is : ", version)
+      this.serverless.cli.log(`Current version is '${version}'`);
       let currentDate = new Date();
       const year = currentDate.getFullYear()
       const month = currentDate.getMonth()
       const date = currentDate.getDate()
       var newVersion = "".concat(year, ".", month, ".", date, ".", "0")
+      this.serverless.cli.log(`Default new version is '${newVersion}'`);
       if (version && (typeof version === 'string' || version instanceof String) && version.includes('.')) {
         let currentVersionArr = version.split('.')
         if (year == currentVersionArr[0] && month == currentVersionArr[1] && date == currentVersionArr[2]) {
           let dayIncrement = parseInt(currentVersionArr[3]) + 1
           newVersion = "".concat(year, ".", month, ".", date, ".", dayIncrement)
+          this.serverless.cli.log(`Incremented new version is '${newVersion}'`);
         }
       }
       return newVersion
@@ -70,9 +72,12 @@ class ServerlessPlugin {
         Value: value,
         Overwrite: true
       };
+      this.serverless.cli.log(`Incrementing SSM version`, name, value);
       SSM.putParameter(params, (err, data) => {
         if (err) { reject(err); }
-        else { resolve(data); }
+        else { 
+          resolve(data);
+         }
       });
     });
 
@@ -86,7 +91,7 @@ class ServerlessPlugin {
     BbPromise.fromCallback(cb => {
       getSsmParameter(ssmParameterName)
       .then(value => {
-        this.serverless.cli.log(`SSM API version: current version '${value}'`);
+        this.serverless.cli.log(`SSM API version: current version`, value);
         const incrementedVersion = incrementVersion(value.toString())
         this.serverless.cli.log(`SSM API version: Updating new version '${incrementedVersion}' to SSM with key '${ssmParameterName}' at region ${region}`);
         putSsmParameter(ssmParameterName, incrementedVersion);
