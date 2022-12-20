@@ -13,6 +13,7 @@
   "author": "Simran Kaur <simrank.adept@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "aws-sdk": "^2.1161.0"
+    "aws-sdk": "^2.1161.0",
+    "bluebird": "^3.7.2"
   }
 }
