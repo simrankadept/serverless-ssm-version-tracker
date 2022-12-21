@@ -94,8 +94,10 @@ class ServerlessPlugin {
         this.serverless.cli.log(`SSM API version: current version`, value);
         const incrementedVersion = incrementVersion(value.toString())
         this.serverless.cli.log(`SSM API version: Updating new version '${incrementedVersion}' to SSM with key '${ssmParameterName}' at region ${region}`);
-        putSsmParameter(ssmParameterName, incrementedVersion);
-        cb();
+        putSsmParameter(ssmParameterName, incrementedVersion)
+        .then(value => {
+          cb();
+        })
       });
     });
     
