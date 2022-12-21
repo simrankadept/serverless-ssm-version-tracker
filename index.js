@@ -88,7 +88,7 @@ class ServerlessPlugin {
       : `/app/${stage}/versions/`;
     const ssmParameterName = ssmPrefix + this.serverless.service.service;
 
-    BbPromise.fromCallback(cb => {
+    let promise = BbPromise.fromCallback(cb => {
       getSsmParameter(ssmParameterName)
       .then(value => {
         this.serverless.cli.log(`SSM API version: current version`, value);
