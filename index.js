@@ -49,9 +49,9 @@ class ServerlessPlugin {
     const incrementVersion = (version) => {
       this.serverless.cli.log(`Current version is '${version}'`);
       let currentDate = new Date();
-      const year = currentDate.getFullYear()
-      const month = currentDate.getMonth()
-      const date = currentDate.getDate()
+      const year = currentDate.getUTCFullYear()
+      const month = currentDate.getUTCMonth()
+      const date = currentDate.getUTCDate()
       var newVersion = "".concat(year, ".", month, ".", date, ".", "0")
       this.serverless.cli.log(`Default new version is '${newVersion}'`);
       if (version && (typeof version === 'string' || version instanceof String) && version.includes('.')) {
