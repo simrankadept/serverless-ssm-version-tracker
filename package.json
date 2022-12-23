@@ -1,6 +1,6 @@
 {
   "name": "serverless-ssm-version-tracker",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "description": "Track and increment versions of Serverless framework projects in SSM",
   "main": "index.js",
   "scripts": {

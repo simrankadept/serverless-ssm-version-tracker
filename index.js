@@ -93,7 +93,7 @@ class ServerlessPlugin {
       .then(value => {
         this.serverless.cli.log(`SSM API version: current version`, value);
         const incrementedVersion = incrementVersion(value.toString())
-        this.serverless.cli.log(`SSM API version: Updating new version '${incrementedVersion}' to SSM with key '${ssmParameterName}' at region ${region}`);
+        this.serverless.cli.log(`SSM API version: Updating new version '${incrementedVersion}' to SSM with key '${ssmParameterName}'`);
         putSsmParameter(ssmParameterName, incrementedVersion)
         .then(value => {
           cb();
