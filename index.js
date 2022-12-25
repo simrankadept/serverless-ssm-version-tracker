@@ -15,7 +15,7 @@ class ServerlessPlugin {
 
     this.hooks = {
       //'after:aws:deploy:deploy:updateStack': this.updateVersionToSsm.bind(this)
-      'before:package:cleanup': () => BbPromise.bind(this)
+      'after:aws:deploy:deploy:updateStack': () => BbPromise.bind(this)
                 .then(this.updateVersionToSsm)
     };
   }
